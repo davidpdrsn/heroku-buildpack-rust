@@ -14,6 +14,10 @@ if [ -e "$ENV_DIR/DATABASE_URL" ]; then
   export DATABASE_URL="$(cat $ENV_DIR/DATABASE_URL)";
 fi
 
+if [ -e "$ENV_DIR/RUSTFLAGS" ]; then
+  export RUSTFLAGS="$(cat $ENV_DIR/RUSTFLAGS)";
+fi
+
 # Set defaults for our configuration variables.  Stable Rust is sufficiently
 # stable at this point that I think we can just default it.
 VERSION=stable
@@ -135,7 +139,7 @@ if [ $RUST_SKIP_BUILD -ne 1 ]; then
   echo "-----> Building application using Cargo"
   cd "$BUILD_DIR/$BUILD_PATH"
   rm -rf target/
-  cargo rustc --release -- -C target-cpu=native
+  cargo build --release
   mkdir -p target/release
   find "$CARGO_TARGET_DIR/release" -maxdepth 1 -type f -executable -exec cp -a -t target/release {} \;
 else
